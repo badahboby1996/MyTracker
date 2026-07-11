@@ -9,8 +9,10 @@
         :root {
             --bg-color: #faf8f5;
             --primary-sage: #8ba88e;
+            --primary-sage-dark: #6d8f71;
             --primary-sage-light: #dbe4dc;
             --accent-pink: #dfbfbe;
+            --accent-pink-dark: #e0a9a8;
             --text-main: #4a4a4a;
             --text-light: #888888;
             --card-bg: #ffffff;
@@ -29,14 +31,14 @@
             font-family: 'Montserrat', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            padding-bottom: 90px; /* Space for bottom nav */
+            padding-bottom: 100px; /* Space for bottom nav */
             line-height: 1.5;
         }
 
         /* Header & Logo */
         header {
             background-color: var(--card-bg);
-            padding: 20px;
+            padding: 15px 20px 12px;
             text-align: center;
             border-bottom-left-radius: var(--border-radius);
             border-bottom-right-radius: var(--border-radius);
@@ -51,20 +53,62 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .logo-svg {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             fill: var(--primary-sage);
         }
 
         h1 {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 600;
             color: var(--primary-sage);
             letter-spacing: 0.5px;
+        }
+
+        /* Water tracker */
+        .water-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            margin-bottom: 12px;
+        }
+
+        .water-cup {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-sage-light);
+            background: #fff;
+            font-size: 14px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: transparent;
+            font-family: inherit;
+            padding: 0;
+        }
+
+        .water-cup.filled {
+            background: #cfe3ee;
+            border-color: #9cc4d8;
+            color: inherit;
+        }
+
+        .water-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-left: 4px;
+            min-width: 44px;
+            text-align: left;
         }
 
         /* Progress Bar */
@@ -90,9 +134,45 @@
             font-weight: 500;
         }
 
+        .week-progress-text {
+            font-size: 0.8rem;
+            color: var(--primary-sage-dark);
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
         /* Main Content */
         main {
             padding: 20px 15px;
+        }
+
+        .date-heading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 5px;
+        }
+
+        .today-badge {
+            font-size: 0.65rem;
+            font-weight: 700;
+            background: var(--primary-sage);
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .swipe-hint {
+            text-align: center;
+            font-size: 0.7rem;
+            color: var(--text-light);
+            margin-bottom: 10px;
         }
 
         .section-title {
@@ -149,6 +229,17 @@
         .card-macros {
             font-size: 0.8rem;
             color: var(--text-light);
+        }
+
+        .appliance-chip {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--primary-sage-dark);
+            background: var(--primary-sage-light);
+            border-radius: 10px;
+            padding: 2px 10px;
+            margin-top: 6px;
         }
 
         /* Custom Checkbox */
@@ -223,6 +314,8 @@
             content: '+';
             font-size: 1.2rem;
             font-weight: 400;
+            flex-shrink: 0;
+            margin-left: 10px;
         }
 
         details[open] summary::after {
@@ -239,6 +332,115 @@
 
         .prep-content strong {
             color: var(--primary-sage);
+        }
+
+        .prep-content ul, .prep-content ol {
+            padding-left: 20px;
+            margin: 6px 0 10px;
+        }
+
+        .prep-content li {
+            margin-bottom: 4px;
+        }
+
+        .prep-note {
+            background: #faf3f3;
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size: 0.8rem;
+            color: #a98685;
+            margin-top: 6px;
+        }
+
+        /* Heatmap */
+        .hm-scroll {
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .hm-grid {
+            display: grid;
+            grid-template-rows: repeat(7, 13px);
+            grid-auto-flow: column;
+            grid-auto-columns: 13px;
+            gap: 3px;
+            width: max-content;
+        }
+
+        .hm-cell {
+            width: 13px;
+            height: 13px;
+            border-radius: 3px;
+            background: #eef1ee;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .hm-cell.l1 { background: #cdddd0; }
+        .hm-cell.l2 { background: #a8c4ac; }
+        .hm-cell.l3 { background: var(--primary-sage); }
+        .hm-cell.l100 { background: var(--accent-pink-dark); }
+        .hm-cell.future { background: #f6f6f4; cursor: default; }
+        .hm-cell.today { outline: 2px solid var(--primary-sage-dark); outline-offset: 1px; }
+        .hm-cell.viewing { box-shadow: 0 0 0 2px var(--accent-pink-dark) inset; }
+
+        .hm-legend {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.7rem;
+            color: var(--text-light);
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .hm-legend .hm-cell { cursor: default; }
+
+        /* Weight chart */
+        .weight-input-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .weight-input-row input {
+            flex: 1;
+            min-width: 0;
+            padding: 10px 12px;
+            border: 2px solid var(--primary-sage-light);
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            color: var(--text-main);
+        }
+
+        .weight-input-row input:focus {
+            border-color: var(--primary-sage);
+        }
+
+        .weight-save-btn {
+            padding: 10px 18px;
+            background: var(--primary-sage);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .weight-meta {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .weight-chart-wrap svg {
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
         /* Bottom Navigation (Days) */
@@ -262,10 +464,10 @@
 
         .day-tab {
             flex: 0 0 auto;
-            width: 65px;
-            padding: 10px 5px;
+            width: 48px;
+            padding: 8px 2px;
             text-align: center;
-            margin: 0 5px;
+            margin: 0 2px;
             border-radius: 16px;
             background: transparent;
             border: none;
@@ -275,25 +477,67 @@
             font-size: 0.8rem;
             scroll-snap-align: center;
             transition: all 0.3s;
+            position: relative;
+            cursor: pointer;
         }
 
         .day-tab .day-name {
             display: block;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             text-transform: uppercase;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .day-tab .day-num {
             display: block;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
+        }
+
+        .day-tab .today-dot {
+            display: block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-pink-dark);
+            margin: 3px auto 0;
         }
 
         .day-tab.active {
             background: var(--primary-sage);
             color: white;
             box-shadow: 0 4px 10px rgba(139, 168, 142, 0.4);
+        }
+
+        .day-tab.active .today-dot {
+            background: #fff;
+        }
+
+        .day-tab.is-today:not(.active) {
+            color: var(--primary-sage-dark);
+        }
+
+        /* Floating "Today" button */
+        .today-btn {
+            position: fixed;
+            bottom: 95px;
+            right: 15px;
+            z-index: 99;
+            background: var(--accent-pink-dark);
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            padding: 12px 20px;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 0.85rem;
+            box-shadow: 0 6px 15px rgba(224, 169, 168, 0.5);
+            cursor: pointer;
+            display: none;
+        }
+
+        .today-btn.visible {
+            display: block;
         }
 
         /* Reset Button */
@@ -310,6 +554,7 @@
             font-weight: 600;
             font-size: 0.9rem;
             text-align: center;
+            cursor: pointer;
         }
 
         /* Messages */
@@ -324,6 +569,76 @@
             margin-bottom: 15px;
         }
 
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            top: -15px;
+            z-index: 1000;
+            pointer-events: none;
+            border-radius: 2px;
+            animation: confetti-fall linear forwards;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(110vh) rotate(720deg);
+            }
+        }
+
+        .celebrate-heart {
+            position: fixed;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            z-index: 1001;
+            pointer-events: none;
+            animation: heart-pop 1.6s ease-out forwards;
+        }
+
+        @keyframes heart-pop {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            30% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+            60% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -80%) scale(1); opacity: 0; }
+        }
+
+        /* Day swipe animations */
+        .slide-in-left {
+            animation: slideInLeft 0.25s ease-out;
+        }
+
+        .slide-in-right {
+            animation: slideInRight 0.25s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(40px); opacity: 0.4; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(-40px); opacity: 0.4; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Info list styling */
+        .info-list {
+            padding-left: 20px;
+            font-size: 0.85rem;
+        }
+
+        .info-list li {
+            margin-bottom: 6px;
+        }
+
+        .info-subtitle {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--primary-sage);
+            text-transform: uppercase;
+            margin: 10px 0 5px;
+        }
     </style>
 </head>
 <body>
@@ -336,169 +651,831 @@
             </svg>
             <h1>Моят Ритъм</h1>
         </div>
+        <div class="water-row" id="water-row"></div>
         <div class="progress-wrapper">
             <div class="progress-fill" id="daily-progress-fill"></div>
         </div>
         <div class="progress-text" id="daily-progress-text">Прогрес за деня: 0%</div>
+        <div class="week-progress-text" id="week-progress-text">Тази седмица: 0%</div>
     </header>
 
     <main id="app-content">
         <!-- Content gets injected here by JS -->
     </main>
 
+    <button class="today-btn" id="today-btn" onclick="goToDate(todayStr(), true)">↩ Днес</button>
+
     <nav id="bottom-nav">
         <!-- Tabs get injected here -->
     </nav>
 
     <script>
-        // Data Structure for the Week
+        // ===== Weekly plan data (keyed by JS weekday: 0 = Sunday ... 6 = Saturday) =====
         const planData = {
             1: {
                 id: 'monday', name: 'ПОНЕДЕЛНИК',
                 workouts: [
                     { id: 'mon-w1', title: 'Тренировка', type: 'Силова / Пилатес' },
-                    { id: 'mon-w2', title: 'Кардио', type: 'Движение' }
+                    { id: 'mon-w2', title: 'Крачки', type: '8–10 000 крачки' }
                 ],
                 meals: [
-                    { id: 'mon-m1', type: 'Закуска', time: '08:00', macros: '~350 ккал | 20–25 г протеин', title: 'Бъркани яйца с филия', ingredients: '2 яйца + 1 белтък, 1 пълнозърнеста филия, домати и краставици отстрани.', prep: '<strong>Плот:</strong> Загрей тиган с няколко капки зехтин или на сух тиган. Разбий яйцата и белтъка, изсипи ги и бъркай до желаната готовност (около 3-4 мин). Сервирай с филийката и нарязаните зеленчуци.' },
-                    { id: 'mon-m2', type: 'Обяд', time: '13:30', macros: '~500 ккал | 30–40 г протеин', title: 'Пилешко филе с киноа', ingredients: '150 г пилешко филе, 40 г киноа (сухо), печени тиквички и чушки на воля.', prep: '<strong>Плот + Еърфрайър:</strong> Свари киноата на плота (1:2 вода, около 12-15 мин). Овкуси пилето с подправки. Нарежи зеленчуците. Печи пилето и зеленчуците в еърфрайъра на 190°C за около 15 минути.' },
-                    { id: 'mon-m3', type: 'Снак', time: '17:00', macros: '~200 ккал', title: 'Кисело мляко с ябълка', ingredients: '200 г кисело мляко 2%, 1 ябълка, канела.', prep: 'Нарежи ябълката на кубчета, смеси с млякото и поръси с канела.' },
-                    { id: 'mon-m4', type: 'Вечеря', time: '20:30', macros: '~400 ккал | 25–35 г протеин', title: 'Телешки кюфтенца с картофи', ingredients: '150 г кюфтенца (сурово тегло), 100 г печени картофи, голяма салата (домати, краставици, ½ ч.л. зехтин).', prep: '<strong>Еърфрайър:</strong> Оформи кюфтенцата. Нарежи картофите, овкуси ги леко. Печи заедно в еърфрайъра на 200°C за 18-20 минути. Направи свежа салата.' },
-                    { id: 'mon-m5', type: 'Лакомство', time: 'По избор', macros: '~150 ккал', title: 'Дневен десерт', ingredients: 'Избери едно: 2 бл. черен шоколад, малък сладолед, 2 бисквити или 30 г сушени плодове.', prep: 'Яде се бавно, седнала, без вина — то е част от плана!' }
+                    {
+                        id: 'mon-m1', type: 'Закуска', time: '08:00', macros: '~350 ккал | 20–25 г протеин',
+                        title: 'Бъркани яйца с филия', appliance: 'Плот',
+                        ingredients: [
+                            '2 цели яйца + 1 белтък',
+                            '1 пълнозърнеста филия (~30 г)',
+                            'Домати и краставици отстрани — на воля',
+                            'Няколко капки зехтин за тигана (или сух незалепващ тиган)',
+                            'Сол и черен пипер'
+                        ],
+                        steps: [
+                            'Разбий яйцата и белтъка в купичка с щипка сол.',
+                            'Загрей тигана на средна степен с няколко капки зехтин.',
+                            'Изсипи яйцата и бъркай с шпатула 3–4 мин — свали ги, докато са още леко кремообразни.',
+                            'Сервирай с филията и нарязаните домати и краставици.'
+                        ]
+                    },
+                    {
+                        id: 'mon-m2', type: 'Обяд', time: '13:30', macros: '~500 ккал | 30–40 г протеин',
+                        title: 'Пилешко филе с печени зеленчуци и киноа', appliance: 'Еърфрайър + Плот',
+                        ingredients: [
+                            '150 г пилешко филе',
+                            '40 г киноа (сухо тегло)',
+                            'Тиквички и чушки за печене — на воля',
+                            '1 ч.л. зехтин за зеленчуците',
+                            'Сол, червен пипер, чесън на прах'
+                        ],
+                        steps: [
+                            '<strong>Плот:</strong> изплакни киноата, сложи я с ~100 мл вода и щипка сол. Кипни, намали и вари под капак 12–15 мин, докато водата попие.',
+                            'Овкуси пилешкото филе със сол, червен пипер и чесън на прах.',
+                            'Нарежи тиквичките и чушките на едри парчета и ги размеси с 1 ч.л. зехтин.',
+                            '<strong>Еърфрайър:</strong> печи пилето и зеленчуците заедно на 190°C за 14–16 мин, обърни по средата. Пилето е готово, когато е бяло в средата, без розово.'
+                        ],
+                        note: 'Общ обяд — тук са нейните грамажи.'
+                    },
+                    {
+                        id: 'mon-m3', type: 'Снак', time: '17:00', macros: '~200 ккал',
+                        title: 'Кисело мляко с ябълка', appliance: 'Без готвене',
+                        ingredients: [
+                            '200 г кисело мляко 2%',
+                            '1 ябълка',
+                            'Канела на вкус'
+                        ],
+                        steps: [
+                            'Нарежи ябълката на кубчета.',
+                            'Смеси с киселото мляко и поръси с канела.'
+                        ],
+                        note: 'Снакът в 17:00 е задължителен — той пази от преяждане на късната вечеря.'
+                    },
+                    {
+                        id: 'mon-m4', type: 'Вечеря', time: '20:30', macros: '~400 ккал | 25–35 г протеин',
+                        title: 'Телешки кюфтенца с картофи и салата', appliance: 'Еърфрайър',
+                        ingredients: [
+                            '150 г телешки кюфтенца (сурово тегло) — нейната порция',
+                            '100 г картофи',
+                            'Голяма салата: домати и краставици',
+                            '½ ч.л. зехтин за салатата',
+                            'Кимион, сол и черен пипер за кюфтетата'
+                        ],
+                        steps: [
+                            'Оформи кюфтенцата (ако не са готови) и ги овкуси с кимион, сол и пипер.',
+                            'Нарежи картофите на едри парчета и ги овкуси със сол и червен пипер.',
+                            '<strong>Еърфрайър:</strong> пусни първо картофите на 200°C за 10 мин.',
+                            'Добави кюфтенцата и печи още 10–12 мин, като разклатиш кошницата по средата.',
+                            'Направи салатата и я полей с ½ ч.л. зехтин.'
+                        ],
+                        note: 'Обща вечеря — готви се веднъж за двамата, тук са нейните грамажи.'
+                    },
+                    {
+                        id: 'mon-m5', type: 'Лакомство', time: 'По избор', macros: '~150 ккал',
+                        title: 'Дневен десерт', appliance: 'Без готвене',
+                        ingredients: [
+                            'Избери ЕДНО: 2 блокчета черен шоколад (70%+)',
+                            '…или 1 малък сладолед на клечка',
+                            '…или 1 топка сладолед',
+                            '…или 2 бисквити',
+                            '…или 30 г сушени плодове'
+                        ],
+                        steps: ['Яде се бавно, седнала, без вина — то е част от плана, не изключение!']
+                    }
                 ]
             },
             2: {
                 id: 'tuesday', name: 'ВТОРНИК',
                 workouts: [
                     { id: 'tue-w1', title: 'Тренировка', type: 'Силова / Пилатес' },
-                    { id: 'tue-w2', title: 'Кардио', type: 'Движение' }
+                    { id: 'tue-w2', title: 'Крачки', type: '8–10 000 крачки' }
                 ],
                 meals: [
-                    { id: 'tue-m1', type: 'Закуска', time: '08:00', macros: '~350 ккал', title: 'Овесена каша с кисело мляко', ingredients: '40 г овесени ядки, 200 г кисело мляко 2%, шепа горски плодове, 10 г орехи.', prep: 'Смеси овеса с киселото мляко (може и от предната вечер). Добави плодовете и натрошените орехи отгоре.' },
-                    { id: 'tue-m2', type: 'Обяд', time: '13:30', macros: '~500 ккал', title: 'Пиле с ориз', ingredients: '150 г пилешко/пуешко, 150 г сварен ориз, печени/задушени зеленчуци.', prep: '<strong>Мултикукър:</strong> Сложи нарязаното месо и измития ориз (съотношение ориз:вода 1:2.5) в мултикукъра с малко сол. Пусни на програма за ориз/под налягане (около 12-15 мин). Добави зеленчуците.' },
-                    { id: 'tue-m3', type: 'Снак', time: '17:00', macros: '~200 ккал', title: 'Айрян с бадеми', ingredients: '250 мл айрян, 15 г бадеми.', prep: 'Бързо и лесно.' },
-                    { id: 'tue-m4', type: 'Вечеря', time: '20:30', macros: '~400 ккал', title: 'Пилешки бутчета с булгур', ingredients: '150 г бутчета (без кост/кожа), 30 г булгур (сухо), салата.', prep: '<strong>Еърфрайър + Плот:</strong> Овкуси бутчетата и ги печи в еърфрайъра на 190°C за 18-20 мин. Залей булгура с вряла вода или кипни на плота за 10 мин. Направи салата.' },
-                    { id: 'tue-m5', type: 'Лакомство', time: 'По избор', macros: '~150 ккал', title: 'Дневен десерт', ingredients: 'Избери едно от позволените.', prep: 'Яде се бавно, седнала, без вина!' }
+                    {
+                        id: 'tue-m1', type: 'Закуска', time: '08:00', macros: '~350 ккал | 20–25 г протеин',
+                        title: 'Овесена каша с кисело мляко', appliance: 'Без готвене',
+                        ingredients: [
+                            '40 г овесени ядки',
+                            '200 г кисело мляко 2%',
+                            'Шепа горски плодове (пресни или замразени) или сезонен плод',
+                            '10 г орехи'
+                        ],
+                        steps: [
+                            'Смеси овеса с киселото мляко и остави 5–10 мин да омекне (или от предната вечер в хладилника).',
+                            'Добави плодовете и натрошените орехи отгоре.'
+                        ]
+                    },
+                    {
+                        id: 'tue-m2', type: 'Обяд', time: '13:30', macros: '~500 ккал | 30–40 г протеин',
+                        title: 'Пиле с ориз', appliance: 'Мултикукър',
+                        ingredients: [
+                            '150 г пилешко или пуешко месо',
+                            '150 г сварен ориз (≈50 г сух)',
+                            'Печени или задушени зеленчуци — на воля',
+                            'Сол и подправки на вкус'
+                        ],
+                        steps: [
+                            '<strong>Мултикукър:</strong> нарежи месото на хапки и го запечатай 2–3 мин на режим Sauté (или на тиган на плота).',
+                            'Добави 50 г измит ориз + 125 мл вода и щипка сол.',
+                            'Затвори капака и готви под налягане 12 мин, после остави 5 мин естествено изпускане.',
+                            'Сервирай със зеленчуците отстрани.'
+                        ],
+                        note: 'Алтернатива без готвене: кутия от неделната яхния, ако е останала.'
+                    },
+                    {
+                        id: 'tue-m3', type: 'Снак', time: '17:00', macros: '~200 ккал',
+                        title: 'Айрян с бадеми', appliance: 'Без готвене',
+                        ingredients: [
+                            '250 мл айрян',
+                            '15 г бадеми'
+                        ],
+                        steps: ['Бързо и лесно — без приготвяне.']
+                    },
+                    {
+                        id: 'tue-m4', type: 'Вечеря', time: '20:30', macros: '~400 ккал | 25–35 г протеин',
+                        title: 'Пилешки бутчета с булгур и салата', appliance: 'Еърфрайър + Плот',
+                        ingredients: [
+                            '150 г пилешки бутчета без кост и кожа — нейната порция',
+                            '30 г булгур (сухо тегло)',
+                            'Салата от домати и краставици',
+                            'Сол, червен пипер, риган за бутчетата'
+                        ],
+                        steps: [
+                            'Овкуси бутчетата със сол, червен пипер и риган.',
+                            '<strong>Еърфрайър:</strong> печи ги на 190°C за 18–20 мин, обърни по средата.',
+                            '<strong>Плот:</strong> залей булгура с ~60 мл вряла вода и щипка сол, покрий и остави 10–12 мин да набъбне.',
+                            'Направи салатата от домати и краставици.'
+                        ],
+                        note: 'Обща вечеря — готви се веднъж за двамата, тук са нейните грамажи.'
+                    },
+                    {
+                        id: 'tue-m5', type: 'Лакомство', time: 'По избор', macros: '~150 ккал',
+                        title: 'Дневен десерт', appliance: 'Без готвене',
+                        ingredients: [
+                            'Избери ЕДНО: 2 блокчета черен шоколад (70%+)',
+                            '…или 1 малък сладолед на клечка',
+                            '…или 1 топка сладолед',
+                            '…или 2 бисквити',
+                            '…или 30 г сушени плодове'
+                        ],
+                        steps: ['Яде се бавно, седнала, без вина — то е част от плана, не изключение!']
+                    }
                 ]
             },
             3: {
                 id: 'wednesday', name: 'СРЯДА',
                 workouts: [
-                    { id: 'wed-w1', title: 'Кардио', type: 'Движение' }
+                    { id: 'wed-w1', title: 'Крачки', type: '8–10 000 крачки' }
                 ],
                 meals: [
-                    { id: 'wed-m1', type: 'Закуска', time: '08:00', macros: '~350 ккал', title: 'Кисело мляко с овес и банан', ingredients: '200 г кисело мляко 2%, 30 г овесени ядки, 1 ч.л. мед, 1 банан.', prep: 'Нарежи банана, смеси всичко в купичка. Медът е за разкош.' },
-                    { id: 'wed-m2', type: 'Обяд', time: '13:30', macros: '~500 ккал', title: 'Салата с риба тон', ingredients: '1 консерва риба тон (собствен сок), 1 варено яйце, маруля/домати/краставици, 30 г сирене, лимон, 1 ч.л. зехтин.', prep: 'Свари яйцето на плота (около 8 мин за твърдо). Нарежи зеленчуците, добави отцедената риба тон, натрошеното сирене и яйцето. Овкуси с лимон и зехтин.' },
-                    { id: 'wed-m3', type: 'Снак', time: '17:00', macros: '~200 ккал', title: 'Плод с ядки', ingredients: '1 сезонен плод, 15 г сурови ядки.', prep: 'Бързо и лесно.' },
-                    { id: 'wed-m4', type: 'Вечеря', time: '20:30', macros: '~400 ккал', title: 'Пилешко чили с боб', ingredients: '~300 г чили, 2–3 с.л. сварен ориз (или без ориз).', prep: '<strong>Мултикукър (готви се за двамата):</strong> Запържи леко лук и пилешко месо. Добави консерва боб, накълцани домати и подправки (кимион, чили). Готви под налягане 15 мин.' },
-                    { id: 'wed-m5', type: 'Лакомство', time: 'По избор', macros: '~150 ккал', title: 'Дневен десерт', ingredients: 'Избери едно от позволените.', prep: 'Яде се бавно, седнала, без вина!' }
+                    {
+                        id: 'wed-m1', type: 'Закуска', time: '08:00', macros: '~350 ккал | 20–25 г протеин',
+                        title: 'Кисело мляко с овес и банан', appliance: 'Без готвене',
+                        ingredients: [
+                            '200 г кисело мляко 2%',
+                            '30 г овесени ядки',
+                            '1 ч.л. мед',
+                            '1 банан'
+                        ],
+                        steps: [
+                            'Нарежи банана на колелца.',
+                            'Смеси всичко в купичка — медът е за разкош отгоре.'
+                        ]
+                    },
+                    {
+                        id: 'wed-m2', type: 'Обяд', time: '13:30', macros: '~500 ккал | 30–40 г протеин',
+                        title: 'Салата с риба тон', appliance: 'Плот',
+                        ingredients: [
+                            '1 консерва риба тон в собствен сок (~140 г отцедена)',
+                            '1 варено яйце',
+                            'Маруля, домати и краставици',
+                            '30 г сирене',
+                            'Лимонов сок',
+                            '1 ч.л. зехтин'
+                        ],
+                        steps: [
+                            '<strong>Плот:</strong> свари яйцето — 8–9 мин от кипването за твърдо сварено, после охлади в студена вода.',
+                            'Нарежи марулята, доматите и краставиците в голяма купа.',
+                            'Добави отцедената риба тон, натрошеното сирене и нарязаното яйце.',
+                            'Овкуси с лимонов сок и 1 ч.л. зехтин.'
+                        ]
+                    },
+                    {
+                        id: 'wed-m3', type: 'Снак', time: '17:00', macros: '~200 ккал',
+                        title: 'Плод с ядки', appliance: 'Без готвене',
+                        ingredients: [
+                            '1 сезонен плод',
+                            '15 г сурови ядки'
+                        ],
+                        steps: ['Бързо и лесно — без приготвяне.']
+                    },
+                    {
+                        id: 'wed-m4', type: 'Вечеря', time: '20:30', macros: '~400 ккал | 25–35 г протеин',
+                        title: 'Пилешко чили с боб', appliance: 'Мултикукър',
+                        ingredients: [
+                            'Нейната порция: ~300 г готово чили',
+                            '2–3 с.л. сварен ориз (или без ориз)',
+                            'За цялото чили: пилешко месо (кайма или ситно нарязано филе), 1 глава лук',
+                            '1 консерва червен боб (отцеден), 1 консерва накълцани домати',
+                            '1 ч.л. кимион, ½–1 ч.л. чили, сол'
+                        ],
+                        steps: [
+                            '<strong>Мултикукър, режим Sauté:</strong> задуши нарязания лук 2–3 мин, добави пилешкото и го запечатай.',
+                            'Добави отцедения боб, накълцаните домати, кимиона, чилито и солта. Разбъркай.',
+                            'Затвори капака и готви под налягане 15 мин, после остави ~10 мин естествено изпускане.',
+                            'Раздели: нейната порция ~300 г + отдели кутия ~250 г за нейния обяд в четвъртък.'
+                        ],
+                        note: 'Обща вечеря — готви се двойно количество за двамата + обяд за четвъртък.'
+                    },
+                    {
+                        id: 'wed-m5', type: 'Лакомство', time: 'По избор', macros: '~150 ккал',
+                        title: 'Дневен десерт', appliance: 'Без готвене',
+                        ingredients: [
+                            'Избери ЕДНО: 2 блокчета черен шоколад (70%+)',
+                            '…или 1 малък сладолед на клечка',
+                            '…или 1 топка сладолед',
+                            '…или 2 бисквити',
+                            '…или 30 г сушени плодове'
+                        ],
+                        steps: ['Яде се бавно, седнала, без вина — то е част от плана, не изключение!']
+                    }
                 ]
             },
             4: {
                 id: 'thursday', name: 'ЧЕТВЪРТЪК',
                 workouts: [
                     { id: 'thu-w1', title: 'Тренировка', type: 'Силова / Пилатес' },
-                    { id: 'thu-w2', title: 'Кардио', type: 'Движение' }
+                    { id: 'thu-w2', title: 'Крачки', type: '8–10 000 крачки' }
                 ],
                 meals: [
-                    { id: 'thu-m1', type: 'Закуска', time: '08:00', macros: '~350 ккал', title: 'Яйца на очи с авокадо', ingredients: '2 яйца на очи, 1 пълнозърнеста филия, ¼ авокадо.', prep: '<strong>Плот:</strong> Изпечи яйцата на тиган с капка зехтин или вода под капак. Намачкай авокадото върху филийката, добави малко сол и лимон.' },
-                    { id: 'thu-m2', type: 'Обяд', time: '13:30', macros: '~500 ккал', title: 'Чили от снощи', ingredients: 'Кутия ~250 г от общото чили + свежа салата.', prep: 'Без готвене. Просто затопли порцията и направи бърза салата.' },
-                    { id: 'thu-m3', type: 'Снак', time: '17:00', macros: '~200 ккал', title: 'Извара с плод', ingredients: '150 г извара, 1 праскова/сезонен плод.', prep: 'Смеси изварата с нарязания плод.' },
-                    { id: 'thu-m4', type: 'Вечеря', time: '20:30', macros: '~400 ккал', title: 'Телешки кюфтенца и зеленчуци', ingredients: '150 г кюфтенца (сурово тегло), 100 г печени картофи, 150 г печени тиквички/патладжан.', prep: '<strong>Еърфрайър:</strong> Оформи кюфтенцата. Нарежи зеленчуците и картофите. Печи всичко в еърфрайъра на 195°C за около 20 минути.' },
-                    { id: 'thu-m5', type: 'Лакомство', time: 'По избор', macros: '~150 ккал', title: 'Дневен десерт', ingredients: 'Избери едно от позволените.', prep: 'Яде се бавно, седнала, без вина!' }
+                    {
+                        id: 'thu-m1', type: 'Закуска', time: '08:00', macros: '~350 ккал | 20–25 г протеин',
+                        title: 'Яйца на очи с авокадо', appliance: 'Плот',
+                        ingredients: [
+                            '2 яйца на очи',
+                            '1 пълнозърнеста филия (~30 г)',
+                            '¼ авокадо',
+                            'Капка зехтин (или вода) за тигана, сол, лимон'
+                        ],
+                        steps: [
+                            '<strong>Плот:</strong> изпечи яйцата на тиган с капка зехтин или с малко вода под капак, докато белтъкът стегне.',
+                            'Намачкай авокадото върху филията, добави малко сол и лимон.',
+                            'Сервирай яйцата върху или до филията.'
+                        ]
+                    },
+                    {
+                        id: 'thu-m2', type: 'Обяд', time: '13:30', macros: '~500 ккал | 30–40 г протеин',
+                        title: 'Чили от снощи', appliance: 'Без готвене',
+                        ingredients: [
+                            'Кутия ~250 г от общото чили (отделена в сряда)',
+                            'Свежа салата'
+                        ],
+                        steps: [
+                            'Затопли порцията чили.',
+                            'Направи бърза свежа салата отстрани.'
+                        ],
+                        note: 'Ден без готвене на обяд — всичко е приготвено от сряда.'
+                    },
+                    {
+                        id: 'thu-m3', type: 'Снак', time: '17:00', macros: '~200 ккал',
+                        title: 'Извара с плод', appliance: 'Без готвене',
+                        ingredients: [
+                            '150 г извара',
+                            '1 праскова или друг сезонен плод'
+                        ],
+                        steps: ['Смеси изварата с нарязания плод.']
+                    },
+                    {
+                        id: 'thu-m4', type: 'Вечеря', time: '20:30', macros: '~400 ккал | 25–35 г протеин',
+                        title: 'Телешки кюфтенца с печени зеленчуци и картофи', appliance: 'Еърфрайър',
+                        ingredients: [
+                            '150 г телешки кюфтенца (сурово тегло) — нейната порция',
+                            '100 г картофи',
+                            '150 г тиквички и/или патладжан за печене',
+                            'Кимион, сол, черен пипер, малко зехтин за зеленчуците'
+                        ],
+                        steps: [
+                            'Оформи кюфтенцата и ги овкуси с кимион, сол и пипер.',
+                            'Нарежи картофите, тиквичките и патладжана на едри парчета.',
+                            '<strong>Еърфрайър:</strong> пусни картофите на 195°C за 8 мин.',
+                            'Добави кюфтенцата и зеленчуците и печи още ~12 мин, разклати кошницата по средата.'
+                        ],
+                        note: 'Обща вечеря — готви се веднъж за двамата, тук са нейните грамажи.'
+                    },
+                    {
+                        id: 'thu-m5', type: 'Лакомство', time: 'По избор', macros: '~150 ккал',
+                        title: 'Дневен десерт', appliance: 'Без готвене',
+                        ingredients: [
+                            'Избери ЕДНО: 2 блокчета черен шоколад (70%+)',
+                            '…или 1 малък сладолед на клечка',
+                            '…или 1 топка сладолед',
+                            '…или 2 бисквити',
+                            '…или 30 г сушени плодове'
+                        ],
+                        steps: ['Яде се бавно, седнала, без вина — то е част от плана, не изключение!']
+                    }
                 ]
             },
             5: {
                 id: 'friday', name: 'ПЕТЪК',
                 workouts: [
                     { id: 'fri-w1', title: 'Тренировка', type: 'Силова / Пилатес' },
-                    { id: 'fri-w2', title: 'Кардио', type: 'Движение' }
+                    { id: 'fri-w2', title: 'Крачки', type: '8–10 000 крачки' }
                 ],
                 meals: [
-                    { id: 'fri-m1', type: 'Закуска', time: '08:00', macros: '~350 ккал', title: 'Овесени палачинки', ingredients: '40 г овес + 1 яйце + 1 банан. Отгоре 100 г кисело мляко.', prep: '<strong>Плот:</strong> Блендирай овеса, яйцето и банана до гладка смес. Печи на сух тиган (или с ½ ч.л. зехтин) по 2-3 мин на страна.' },
-                    { id: 'fri-m2', type: 'Обяд', time: '13:30', macros: '~500 ккал', title: 'Риба с картофи', ingredients: '130 г сьомга или бяла риба, 150 г печени картофи, салата.', prep: '<strong>Еърфрайър:</strong> Овкуси рибата и нарязаните картофи. Печи в еърфрайера на 190°C за 10–12 мин. Направи свежа салата.' },
-                    { id: 'fri-m3', type: 'Снак', time: '17:00', macros: '~200 ккал', title: 'Оризовки с фъстъчено масло', ingredients: '2 оризовки, 1 ч.л. фъстъчено масло.', prep: 'Намажи и се наслади.' },
-                    { id: 'fri-m4', type: 'Вечеря', time: '20:30', macros: '~400 ккал', title: 'Пилешко филе със зелен боб', ingredients: '120 г пилешко филе, 40 г булгур (сухо), зелен боб и чери домати на воля.', prep: '<strong>Плот:</strong> Свари булгура (10 мин). Задуши зеления боб и чери доматите на тиган с малко вода. Пилето можеш да изпечеш на същия тиган или в еърфрайъра (15 мин).' },
-                    { id: 'fri-m5', type: 'Лакомство', time: 'По избор', macros: '~150 ккал', title: 'Дневен десерт', ingredients: 'Избери едно от позволените.', prep: 'Яде се бавно, седнала, без вина!' }
+                    {
+                        id: 'fri-m1', type: 'Закуска', time: '08:00', macros: '~350 ккал | 20–25 г протеин',
+                        title: 'Овесени палачинки', appliance: 'Плот',
+                        ingredients: [
+                            '40 г овесени ядки',
+                            '1 яйце',
+                            '1 банан',
+                            '½ ч.л. зехтин за тигана (или сух тиган)',
+                            '100 г кисело мляко за отгоре'
+                        ],
+                        steps: [
+                            'Блендирай овеса, яйцето и банана до гладка смес.',
+                            '<strong>Плот:</strong> загрей тигана и печи малки палачинки по 2–3 мин на страна на сух тиган или с ½ ч.л. зехтин.',
+                            'Сервирай със 100 г кисело мляко отгоре.'
+                        ]
+                    },
+                    {
+                        id: 'fri-m2', type: 'Обяд', time: '13:30', macros: '~500 ккал | 30–40 г протеин',
+                        title: 'Риба с картофи', appliance: 'Еърфрайър',
+                        ingredients: [
+                            '130 г сьомга или бяла риба',
+                            '150 г картофи за печене',
+                            'Салата',
+                            'Сол, лимон, подправки за риба'
+                        ],
+                        steps: [
+                            'Нарежи картофите, овкуси ги и ги пусни в еърфрайъра на 200°C за 10 мин.',
+                            'Овкуси рибата със сол, лимон и подправки.',
+                            'Добави рибата при картофите и печи на 190°C още 10–12 мин, докато рибата се отделя лесно на люспи.',
+                            'Направи свежа салата отстрани.'
+                        ]
+                    },
+                    {
+                        id: 'fri-m3', type: 'Снак', time: '17:00', macros: '~200 ккал',
+                        title: 'Оризовки с фъстъчено масло', appliance: 'Без готвене',
+                        ingredients: [
+                            '2 оризовки',
+                            '1 ч.л. фъстъчено масло'
+                        ],
+                        steps: ['Намажи и се наслади.']
+                    },
+                    {
+                        id: 'fri-m4', type: 'Вечеря', time: '20:30', macros: '~400 ккал | 25–35 г протеин',
+                        title: 'Пилешко филе със зелен боб и булгур', appliance: 'Плот (или Еърфрайър)',
+                        ingredients: [
+                            '120 г пилешко филе — нейната порция',
+                            '40 г булгур (сухо тегло)',
+                            'Зелен боб и чери домати — на воля',
+                            'Сол, черен пипер, чесън'
+                        ],
+                        steps: [
+                            '<strong>Плот:</strong> свари булгура ~10 мин (или го залей с вряла вода под капак).',
+                            'Задуши зеления боб и чери доматите на тиган с малко вода и чесън.',
+                            'Изпечи пилето на същия тиган или в <strong>еърфрайъра</strong> на 190°C за ~15 мин.',
+                            '<strong>Важно:</strong> изпечи допълнително +100 г филе — то е за студеното табуле с пиле в събота на обяд.'
+                        ],
+                        note: 'Обща вечеря — готви се веднъж за двамата, тук са нейните грамажи.'
+                    },
+                    {
+                        id: 'fri-m5', type: 'Лакомство', time: 'По избор', macros: '~150 ккал',
+                        title: 'Дневен десерт', appliance: 'Без готвене',
+                        ingredients: [
+                            'Избери ЕДНО: 2 блокчета черен шоколад (70%+)',
+                            '…или 1 малък сладолед на клечка',
+                            '…или 1 топка сладолед',
+                            '…или 2 бисквити',
+                            '…или 30 г сушени плодове'
+                        ],
+                        steps: ['Яде се бавно, седнала, без вина — то е част от плана, не изключение!']
+                    }
                 ]
             },
             6: {
                 id: 'saturday', name: 'СЪБОТА',
                 workouts: [
-                    { id: 'sat-w1', title: 'Кардио', type: 'Движение' }
+                    { id: 'sat-w1', title: 'Крачки', type: '8–10 000 крачки' }
                 ],
                 meals: [
-                    { id: 'sat-m1', type: 'Закуска', time: '08:00', macros: '~350 ккал', title: 'Яйца със сирене', ingredients: '2 яйца (бъркани или на очи), 30 г сирене, свежи зеленчуци.', prep: '<strong>Плот:</strong> Приготви яйцата по любим начин на тиган. Поръси със сиренето и сервирай със зеленчуците.' },
-                    { id: 'sat-m2', type: 'Обяд', time: '13:30', macros: '~500 ккал', title: 'Табуле с пиле', ingredients: '40 г булгур (сухо), 150 г домати, магданоз, лимон, зехтин + 100 г студено пилешко от петък.', prep: 'Без готвене. Залей булгура с вряла вода да набъбне. Нарежи доматите и много магданоз, добави нарязаното студено пилешко. Овкуси с лимон и зехтин.' },
-                    { id: 'sat-m3', type: 'Снак', time: '17:00', macros: '~200 ккал', title: 'Плод с ядки', ingredients: '1 сезонен плод, 15 г ядки.', prep: 'Бързо и лесно.' },
-                    { id: 'sat-m4', type: 'Вечеря', time: '20:30', macros: '~400 ккал', title: 'Бутчета с печени чушки', ingredients: '150 г бутчета (без кост/кожа), печени чушки и салата на воля (без зърнена гарнитура).', prep: '<strong>Еърфрайър:</strong> Печи бутчетата на 190°C за 18-20 мин. Сервирай с готовите печени чушки и голяма свежа салата.' },
-                    { id: 'sat-m5', type: 'Лакомство', time: 'По избор', macros: '~150 ккал', title: 'Дневен десерт', ingredients: 'Избери едно от позволените.', prep: 'Яде се бавно, седнала, без вина!' }
+                    {
+                        id: 'sat-m1', type: 'Закуска', time: '08:00', macros: '~350 ккал | 20–25 г протеин',
+                        title: 'Яйца със сирене', appliance: 'Плот',
+                        ingredients: [
+                            '2 яйца (бъркани или на очи)',
+                            '30 г сирене',
+                            'Свежи зеленчуци — на воля'
+                        ],
+                        steps: [
+                            '<strong>Плот:</strong> приготви яйцата по любимия начин на тиган.',
+                            'Поръси с натрошеното сирене и сервирай със свежите зеленчуци.'
+                        ]
+                    },
+                    {
+                        id: 'sat-m2', type: 'Обяд', time: '13:30', macros: '~500 ккал | 30–40 г протеин',
+                        title: 'Табуле с пиле', appliance: 'Без готвене',
+                        ingredients: [
+                            '40 г булгур (сухо тегло)',
+                            '150 г домати на кубчета',
+                            'Много магданоз, ситно нарязан',
+                            'Лимонов сок + 1 ч.л. зехтин',
+                            '100 г студено пилешко от петъчната вечеря, на ивици'
+                        ],
+                        steps: [
+                            'Залей булгура с вряла вода, покрий и остави 10–12 мин да набъбне, после разрохкай с вилица.',
+                            'Нарежи доматите на кубчета и накълцай много магданоз.',
+                            'Смеси булгура, доматите и магданоза; овкуси с лимонов сок и зехтин.',
+                            'Добави студеното пилешко, нарязано на ивици.'
+                        ],
+                        note: 'Ден без готвене на обяд — само сглобяване.'
+                    },
+                    {
+                        id: 'sat-m3', type: 'Снак', time: '17:00', macros: '~200 ккал',
+                        title: 'Плод с ядки', appliance: 'Без готвене',
+                        ingredients: [
+                            '1 сезонен плод',
+                            '15 г ядки'
+                        ],
+                        steps: ['Бързо и лесно — без приготвяне.']
+                    },
+                    {
+                        id: 'sat-m4', type: 'Вечеря', time: '20:30', macros: '~400 ккал | 25–35 г протеин',
+                        title: 'Пилешки бутчета с печени чушки и салата', appliance: 'Еърфрайър',
+                        ingredients: [
+                            '150 г пилешки бутчета без кост и кожа — нейната порция',
+                            'Печени чушки — на воля',
+                            'Салата — на воля',
+                            'Без зърнена гарнитура',
+                            'Сол, червен пипер, риган'
+                        ],
+                        steps: [
+                            'Овкуси бутчетата със сол, червен пипер и риган.',
+                            '<strong>Еърфрайър:</strong> печи ги на 190°C за 18–20 мин, обърни по средата.',
+                            'Сервирай с печените чушки и голяма свежа салата.'
+                        ],
+                        note: 'Обща вечеря — готви се веднъж за двамата, тук са нейните грамажи.'
+                    },
+                    {
+                        id: 'sat-m5', type: 'Лакомство', time: 'По избор', macros: '~150 ккал',
+                        title: 'Дневен десерт', appliance: 'Без готвене',
+                        ingredients: [
+                            'Избери ЕДНО: 2 блокчета черен шоколад (70%+)',
+                            '…или 1 малък сладолед на клечка',
+                            '…или 1 топка сладолед',
+                            '…или 2 бисквити',
+                            '…или 30 г сушени плодове'
+                        ],
+                        steps: ['Яде се бавно, седнала, без вина — то е част от плана, не изключение!']
+                    }
                 ]
             },
             0: { // Sunday is 0 in JS Date.getDay()
                 id: 'sunday', name: 'НЕДЕЛЯ',
                 workouts: [], // Full rest
                 meals: [
-                    { id: 'sun-m1', type: 'Закуска', time: '08:00', macros: '~350 ккал', title: 'Бананови овес-палачинки', ingredients: '1 яйце, ½ банан, 30 г овесени ядки, канела. Отгоре 100 г кисело мляко или 1 ч.л. фъстъчено масло.', prep: '<strong>Плот:</strong> Блендирай сместа. Печи на загрят тиган.' },
-                    { id: 'sun-m2', type: 'Обяд', time: '13:30', macros: 'Без сметки и вина', title: 'Свободно хранене', ingredients: 'Навън или яхния: ~150 г пилешко, 100 г картофи.', prep: 'Ако сте вкъщи (<strong>Мултикукър</strong>): Пилешка яхния. Сложи месото, картофите, моркови, лук и малко доматен сок. Пусни под налягане за 20 мин.' },
-                    { id: 'sun-m3', type: 'Снак', time: '17:00', macros: '~200 ккал', title: 'Диня с бадеми', ingredients: '200–300 г диня (или пъпеш), 10 г бадеми.', prep: 'Нарежи и се наслади.' },
-                    { id: 'sun-m4', type: 'Вечеря', time: '20:30', macros: '~400 ккал', title: 'Салата с туна и яйца', ingredients: '1 конс. риба тон, 1 варено яйце, домати, краставица, маслини, лимон, ½ ч.л. зехтин (без хляб/1 тънка филия).', prep: 'Свари яйцето, нарежи зеленчуците, смеси с рибата и маслините. Овкуси.' },
-                    { id: 'sun-m5', type: 'Лакомство', time: 'По избор', macros: '~150 ккал', title: 'Дневен десерт', ingredients: 'Избери едно от позволените.', prep: 'Яде се бавно, седнала, без вина!' }
+                    {
+                        id: 'sun-m1', type: 'Закуска', time: '08:00', macros: '~350 ккал | 20–25 г протеин',
+                        title: 'Бананови овес-палачинки', appliance: 'Плот',
+                        ingredients: [
+                            '1 яйце',
+                            '½ банан',
+                            '30 г овесени ядки',
+                            'Канела',
+                            'Отгоре: 100 г кисело мляко или 1 ч.л. фъстъчено масло'
+                        ],
+                        steps: [
+                            'Блендирай яйцето, банана, овеса и канелата до гладка смес.',
+                            '<strong>Плот:</strong> печи малки палачинки на загрят тиган по 2–3 мин на страна.',
+                            'Сервирай със 100 г кисело мляко или 1 ч.л. фъстъчено масло отгоре.'
+                        ]
+                    },
+                    {
+                        id: 'sun-m2', type: 'Обяд', time: '13:30', macros: 'Без сметки и без вина',
+                        title: 'СВОБОДНОТО ХРАНЕНЕ НА СЕДМИЦАТА', appliance: 'Мултикукър (ако сте вкъщи)',
+                        ingredients: [
+                            'Навън или каквото ви се яде — в нормална порция',
+                            'Ако сте си вкъщи — пилешка яхния от мултикукъра',
+                            'Нейната порция от яхнията: ~150 г пилешко + 100 г картофи',
+                            'За яхнията: пилешко, картофи, моркови, лук, малко доматен сок'
+                        ],
+                        steps: [
+                            'Ако ядете навън: нормална порция, без сметки и без вина — това е застраховката на плана.',
+                            'Ако готвите: <strong>мултикукър, режим Sauté</strong> — задуши лука и морковите 2–3 мин.',
+                            'Добави пилешкото, картофите и малко доматен сок с подправки.',
+                            'Затвори капака и готви под налягане 20 мин, после естествено изпускане.'
+                        ]
+                    },
+                    {
+                        id: 'sun-m3', type: 'Снак', time: '17:00', macros: '~200 ккал',
+                        title: 'Диня с бадеми', appliance: 'Без готвене',
+                        ingredients: [
+                            '200–300 г диня (или пъпеш)',
+                            '10 г бадеми'
+                        ],
+                        steps: ['Нарежи и се наслади.']
+                    },
+                    {
+                        id: 'sun-m4', type: 'Вечеря', time: '20:30', macros: '~400 ккал | 25–35 г протеин',
+                        title: 'Салата с туна и яйца', appliance: 'Плот',
+                        ingredients: [
+                            '1 консерва риба тон в собствен сок',
+                            '1 варено яйце',
+                            'Домати, краставица, маслини',
+                            'Лимонов сок + ½ ч.л. зехтин',
+                            'Без хляб или с 1 тънка филия'
+                        ],
+                        steps: [
+                            '<strong>Плот:</strong> свари яйцето — 8–9 мин от кипването, охлади и обели.',
+                            'Нарежи доматите и краставицата в голяма купа.',
+                            'Добави отцедената риба тон, маслините и нарязаното яйце.',
+                            'Овкуси с лимонов сок и ½ ч.л. зехтин.'
+                        ],
+                        note: 'Обща вечеря — тук са нейните грамажи.'
+                    },
+                    {
+                        id: 'sun-m5', type: 'Лакомство', time: 'По избор', macros: '~150 ккал',
+                        title: 'Дневен десерт', appliance: 'Без готвене',
+                        ingredients: [
+                            'Избери ЕДНО: 2 блокчета черен шоколад (70%+)',
+                            '…или 1 малък сладолед на клечка',
+                            '…или 1 топка сладолед',
+                            '…или 2 бисквити',
+                            '…или 30 г сушени плодове'
+                        ],
+                        steps: ['Яде се бавно, седнала, без вина — то е част от плана, не изключение!']
+                    }
                 ]
             }
         };
 
-        const STORAGE_KEY = 'mrs_fitness_tracker_state';
-        let state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+        // ===== Static info: shopping list & rules (from the meal plan) =====
+        const shoppingListHTML = `
+            <div class="info-subtitle">А) Добавка към общия пазар (общите вечери — готви се веднъж, повече)</div>
+            <ul class="info-list">
+                <li>Пилешко филе: <strong>+700 г</strong> към неговото количество</li>
+                <li>Телешки кюфтенца: <strong>+300 г</strong> (общо ~800 г/седмица)</li>
+                <li>Пилешки бутчета без кост и кожа: <strong>+300 г</strong> (общо ~800 г/седмица)</li>
+                <li>Риба тон в собствен сок: <strong>+2 консерви</strong></li>
+                <li>Яйца: <strong>+5 бр.</strong></li>
+                <li>Картофи: <strong>+500 г</strong> · зеленчуци за печене и салати: <strong>+~30%</strong></li>
+            </ul>
+            <div class="info-subtitle">Б) Само нейни продукти</div>
+            <ul class="info-list">
+                <li><strong>Протеини:</strong> кисело мляко 2% ~1 кг, извара 150–200 г, айрян 2 бр., сирене ~100 г, сьомга или бяла риба 130–150 г, пуешко/пилешко за обедите вт ~150 г, риба тон 2 консерви (за обяд сряда + резерв)</li>
+                <li><strong>Зърнени:</strong> овесени ядки ~300 г, ориз ~100 г, булгур ~100 г, киноа ~50 г, пълнозърнест хляб (4–5 филии), оризовки 1 пакет</li>
+                <li><strong>Плодове:</strong> банани 3 бр., ябълки 2–3 бр., праскови/кайсии 3–4 бр., горски плодове 1 кутия (или замразени), диня — от общата</li>
+                <li><strong>Ядки и други:</strong> орехи/бадеми ~100 г, фъстъчено масло (общо с неговото), мед, канела, авокадо 1 бр. (¼ за чт, останалото — за неговите закуски)</li>
+                <li><strong>Лакомства за седмицата:</strong> 1 черен шоколад 70%+, кутия мини сладоледи или бисквити — купени веднъж, порционирани предварително</li>
+            </ul>
+        `;
 
-        let currentDayIndex = new Date().getDay(); // 0 is Sunday, 1 is Monday...
+        const rulesHTML = `
+            <ol class="info-list">
+                <li><strong>Вода:</strong> ~2 л/ден, чаша преди всяко хранене (ползвай чашите в хедъра!).</li>
+                <li><strong>Претегляне:</strong> веднъж седмично, сутрин на гладно, един и същи ден. Гледа се трендът за 2–3 седмици, не отделното число.</li>
+                <li><strong>Прегрешение ≠ провал:</strong> следващото хранене е по плана, нищо не се компенсира с глад.</li>
+                <li><strong>След вечеря:</strong> чай, вода или лакомството, ако не е изядено през деня.</li>
+                <li><strong>При застой над 3 седмици:</strong> първо проверка на порциите, после –100 ккал от въглехидратите на вечеря (маха се гарнитурата).</li>
+            </ol>
+            <div class="prep-note">Цели: ~1600 ккал/ден · 100–110 г протеин/ден · темпо ~0.4 кг/седмица · очакван срок ~5–6 месеца.</div>
+        `;
+
+        // ===== State (history keyed by date "YYYY-MM-DD") =====
+        const STORAGE_KEY = 'mrs_fitness_tracker_v2';
+        const OLD_STORAGE_KEY = 'mrs_fitness_tracker_state';
+
+        const WEIGHT_START = 68;
+        const WEIGHT_GOAL = 58;
+        const WATER_GOAL = 8;
+
+        function todayStr() {
+            return fmtDate(new Date());
+        }
+
+        function fmtDate(d) {
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const dd = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${dd}`;
+        }
+
+        function parseDate(s) {
+            const [y, m, d] = s.split('-').map(Number);
+            return new Date(y, m - 1, d);
+        }
+
+        function addDays(s, n) {
+            const d = parseDate(s);
+            d.setDate(d.getDate() + n);
+            return fmtDate(d);
+        }
+
+        function mondayOf(s) {
+            const d = parseDate(s);
+            const wd = (d.getDay() + 6) % 7; // 0 = Monday
+            d.setDate(d.getDate() - wd);
+            return fmtDate(d);
+        }
+
+        function loadState() {
+            let s = null;
+            try { s = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch (e) {}
+            if (!s || typeof s !== 'object') {
+                s = { days: {}, weights: [] };
+                // Migrate the old flat checkbox state (no dates) into today's entry
+                try {
+                    const old = JSON.parse(localStorage.getItem(OLD_STORAGE_KEY));
+                    if (old && typeof old === 'object') {
+                        s.days[todayStr()] = { tasks: old, water: 0 };
+                        localStorage.removeItem(OLD_STORAGE_KEY);
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+                    }
+                } catch (e) {}
+            }
+            if (!s.days) s.days = {};
+            if (!Array.isArray(s.weights)) s.weights = [];
+            return s;
+        }
+
+        let state = loadState();
+
+        function saveState() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        }
+
+        function dayState(dateStr) {
+            if (!state.days[dateStr]) state.days[dateStr] = { tasks: {}, water: 0 };
+            if (!state.days[dateStr].tasks) state.days[dateStr].tasks = {};
+            if (typeof state.days[dateStr].water !== 'number') state.days[dateStr].water = 0;
+            return state.days[dateStr];
+        }
+
+        function planFor(dateStr) {
+            return planData[parseDate(dateStr).getDay()];
+        }
+
+        function allTasks(plan) {
+            return plan.workouts.concat(plan.meals);
+        }
+
+        function dayPercent(dateStr) {
+            const plan = planFor(dateStr);
+            const total = allTasks(plan).length;
+            if (total === 0) return 100;
+            const tasks = (state.days[dateStr] || {}).tasks || {};
+            let done = 0;
+            allTasks(plan).forEach(t => { if (tasks[t.id]) done++; });
+            return Math.round((done / total) * 100);
+        }
+
+        function weekPercent(refDateStr) {
+            const mon = mondayOf(refDateStr);
+            const today = todayStr();
+            let total = 0, done = 0;
+            for (let i = 0; i < 7; i++) {
+                const ds = addDays(mon, i);
+                if (ds > today) break; // only elapsed days count
+                const plan = planFor(ds);
+                const tasks = (state.days[ds] || {}).tasks || {};
+                allTasks(plan).forEach(t => {
+                    total++;
+                    if (tasks[t.id]) done++;
+                });
+            }
+            return total === 0 ? 0 : Math.round((done / total) * 100);
+        }
+
+        // ===== App =====
+        const BG_MONTHS = ['януари', 'февруари', 'март', 'април', 'май', 'юни', 'юли', 'август', 'септември', 'октомври', 'ноември', 'декември'];
+        const BG_DAYS_SHORT = { 1: 'ПН', 2: 'ВТ', 3: 'СР', 4: 'ЧТ', 5: 'ПТ', 6: 'СБ', 0: 'НД' };
+        const BG_DAYS_FULL = { 1: 'Понеделник', 2: 'Вторник', 3: 'Сряда', 4: 'Четвъртък', 5: 'Петък', 6: 'Събота', 0: 'Неделя' };
+        const HEATMAP_WEEKS = 24; // ~5-6 month goal
+
+        let currentDate = todayStr();
 
         const appContent = document.getElementById('app-content');
         const bottomNav = document.getElementById('bottom-nav');
+        const waterRow = document.getElementById('water-row');
         const progressFill = document.getElementById('daily-progress-fill');
         const progressText = document.getElementById('daily-progress-text');
+        const weekProgressText = document.getElementById('week-progress-text');
+        const todayBtn = document.getElementById('today-btn');
 
         function init() {
-            renderNav();
-            renderDay(currentDayIndex);
+            renderAll();
+            setupSwipe();
         }
 
+        function renderAll(slideDir) {
+            renderNav();
+            renderWater();
+            renderDay(slideDir);
+            updateProgress();
+            updateTodayButton();
+        }
+
+        function goToDate(dateStr, smooth) {
+            const slideDir = dateStr > currentDate ? 'left' : (dateStr < currentDate ? 'right' : null);
+            currentDate = dateStr;
+            renderAll(smooth ? null : slideDir);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateTodayButton() {
+            todayBtn.classList.toggle('visible', currentDate !== todayStr());
+        }
+
+        // --- Bottom nav: the week of the currently viewed date, with real dates ---
         function renderNav() {
-            // Map JS days (0-6) to logical display order (Mon-Sun: 1, 2, 3, 4, 5, 6, 0)
-            const order = [1, 2, 3, 4, 5, 6, 0];
-            const bgDays = {1:'ПН', 2:'ВТ', 3:'СР', 4:'ЧТ', 5:'ПТ', 6:'СБ', 0:'НД'};
-            
+            const mon = mondayOf(currentDate);
+            const today = todayStr();
             bottomNav.innerHTML = '';
-            order.forEach(dayInt => {
+            for (let i = 0; i < 7; i++) {
+                const ds = addDays(mon, i);
+                const d = parseDate(ds);
                 const btn = document.createElement('button');
-                btn.className = `day-tab ${dayInt === currentDayIndex ? 'active' : ''}`;
-                btn.innerHTML = `<span class="day-name">${bgDays[dayInt]}</span><span class="day-num">•</span>`;
+                const isToday = ds === today;
+                btn.className = 'day-tab'
+                    + (ds === currentDate ? ' active' : '')
+                    + (isToday ? ' is-today' : '');
+                btn.innerHTML = `
+                    <span class="day-name">${BG_DAYS_SHORT[d.getDay()]}</span>
+                    <span class="day-num">${d.getDate()}</span>
+                    ${isToday ? '<span class="today-dot"></span>' : ''}
+                `;
                 btn.onclick = () => {
-                    currentDayIndex = dayInt;
-                    document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
-                    btn.classList.add('active');
-                    renderDay(dayInt);
-                    
-                    // Smooth scroll tab into view
+                    goToDate(ds);
                     btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
                 };
                 bottomNav.appendChild(btn);
-            });
+            }
         }
 
-        function renderDay(dayIndex) {
-            const dayData = planData[dayIndex];
-            let html = ``;
+        // --- Water tracker (per viewed day) ---
+        function renderWater() {
+            const ds = dayState(currentDate);
+            let html = '';
+            for (let i = 0; i < WATER_GOAL; i++) {
+                const filled = i < ds.water;
+                html += `<button class="water-cup ${filled ? 'filled' : ''}" onclick="tapWater(${i})" aria-label="Чаша ${i + 1}">💧</button>`;
+            }
+            html += `<span class="water-label">${ds.water}/${WATER_GOAL}</span>`;
+            waterRow.innerHTML = html;
+        }
+
+        function tapWater(i) {
+            const ds = dayState(currentDate);
+            // Tap the last filled cup to remove it; tap any cup to fill up to it
+            ds.water = (ds.water === i + 1) ? i : i + 1;
+            saveState();
+            renderWater();
+        }
+
+        // --- Day view ---
+        function renderDay(slideDir) {
+            const dateStr = currentDate;
+            const plan = planFor(dateStr);
+            const tasks = dayState(dateStr).tasks;
+            const d = parseDate(dateStr);
+            const isToday = dateStr === todayStr();
+
+            let html = `
+                <div class="date-heading">
+                    ${BG_DAYS_FULL[d.getDay()]}, ${d.getDate()} ${BG_MONTHS[d.getMonth()]}
+                    ${isToday ? '<span class="today-badge">Днес</span>' : ''}
+                </div>
+                <div class="swipe-hint">← плъзни за смяна на деня →</div>
+            `;
 
             // Workouts Section
-            if(dayData.workouts.length > 0) {
+            if (plan.workouts.length > 0) {
                 html += `<h2 class="section-title">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>
                     Активност
                 </h2>`;
-                dayData.workouts.forEach(w => {
-                    const isChecked = state[w.id] ? 'checked' : '';
-                    const completedClass = state[w.id] ? 'completed' : '';
+                plan.workouts.forEach(w => {
+                    const isChecked = tasks[w.id] ? 'checked' : '';
+                    const completedClass = tasks[w.id] ? 'completed' : '';
                     html += `
                         <div class="card ${completedClass}" id="card-${w.id}">
                             <div class="card-header">
@@ -522,9 +1499,11 @@
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
                 Хранения
             </h2>`;
-            dayData.meals.forEach(m => {
-                const isChecked = state[m.id] ? 'checked' : '';
-                const completedClass = state[m.id] ? 'completed' : '';
+            plan.meals.forEach(m => {
+                const isChecked = tasks[m.id] ? 'checked' : '';
+                const completedClass = tasks[m.id] ? 'completed' : '';
+                const ingredientsList = m.ingredients.map(i => `<li>${i}</li>`).join('');
+                const stepsList = m.steps.map(s => `<li>${s}</li>`).join('');
                 html += `
                     <div class="card ${completedClass}" id="card-${m.id}">
                         <div class="card-header">
@@ -532,69 +1511,317 @@
                                 <span class="card-type">${m.type} • ${m.time}</span>
                                 <div class="card-title">${m.title}</div>
                                 <div class="card-macros">${m.macros}</div>
+                                <span class="appliance-chip">${m.appliance}</span>
                             </div>
                             <label class="checkbox-wrapper">
                                 <input type="checkbox" ${isChecked} onchange="toggleTask('${m.id}')">
                             </label>
                         </div>
                         <details>
-                            <summary>Виж детайли и приготвяне</summary>
+                            <summary>Продукти, грамажи и приготвяне</summary>
                             <div class="prep-content">
-                                <div><strong>Продукти:</strong> ${m.ingredients}</div>
-                                <div style="margin-top: 8px;"><strong>Начин на приготвяне:</strong> ${m.prep}</div>
+                                <strong>Продукти и грамажи:</strong>
+                                <ul>${ingredientsList}</ul>
+                                <strong>Начин на приготвяне:</strong>
+                                <ol>${stepsList}</ol>
+                                ${m.note ? `<div class="prep-note">${m.note}</div>` : ''}
                             </div>
                         </details>
                     </div>
                 `;
             });
 
-            // Reset Weekly Button (added at the bottom)
-            html += `<button class="reset-btn" onclick="confirmReset()">Изчисти целия прогрес за седмицата</button>`;
+            // Progress section: heatmap + weight
+            html += `<h2 class="section-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                Прогрес
+            </h2>`;
+            html += renderHeatmapCard();
+            html += renderWeightCard();
+
+            // Info section: shopping list + rules
+            html += `<h2 class="section-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                Инфо
+            </h2>`;
+            html += `
+                <div class="card">
+                    <details>
+                        <summary>🛒 Списък за пазаруване (седмица)</summary>
+                        <div class="prep-content">${shoppingListHTML}</div>
+                    </details>
+                </div>
+                <div class="card">
+                    <details>
+                        <summary>📋 Правила за придържане</summary>
+                        <div class="prep-content">${rulesHTML}</div>
+                    </details>
+                </div>
+            `;
+
+            // Reset button (this day only — history stays intact)
+            html += `<button class="reset-btn" onclick="confirmReset()">Изчисти отметките за този ден</button>`;
 
             appContent.innerHTML = html;
-            updateProgress(dayData);
-        }
 
-        function toggleTask(id) {
-            state[id] = !state[id];
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-            
-            const card = document.getElementById(`card-${id}`);
-            if(state[id]) {
-                card.classList.add('completed');
-            } else {
-                card.classList.remove('completed');
+            if (slideDir) {
+                appContent.classList.remove('slide-in-left', 'slide-in-right');
+                void appContent.offsetWidth; // restart animation
+                appContent.classList.add(slideDir === 'left' ? 'slide-in-left' : 'slide-in-right');
             }
 
-            const dayData = planData[currentDayIndex];
-            updateProgress(dayData);
+            initWeightCard();
+            scrollHeatmapToEnd();
         }
 
-        function updateProgress(dayData) {
-            let total = dayData.workouts.length + dayData.meals.length;
-            let completed = 0;
+        // --- Heatmap (GitHub-style) ---
+        function renderHeatmapCard() {
+            const today = todayStr();
+            const startMon = addDays(mondayOf(today), -(HEATMAP_WEEKS - 1) * 7);
+            let cells = '';
+            for (let w = 0; w < HEATMAP_WEEKS; w++) {
+                for (let i = 0; i < 7; i++) {
+                    const ds = addDays(startMon, w * 7 + i);
+                    let cls = 'hm-cell';
+                    let clickable = false;
+                    if (ds > today) {
+                        cls += ' future';
+                    } else {
+                        const pct = dayPercent(ds);
+                        if (pct === 100) cls += ' l100';
+                        else if (pct >= 67) cls += ' l3';
+                        else if (pct >= 34) cls += ' l2';
+                        else if (pct >= 1) cls += ' l1';
+                        clickable = true;
+                    }
+                    if (ds === today) cls += ' today';
+                    if (ds === currentDate) cls += ' viewing';
+                    cells += clickable
+                        ? `<button class="${cls}" onclick="goToDate('${ds}')" title="${ds}"></button>`
+                        : `<span class="${cls}"></span>`;
+                }
+            }
+            return `
+                <div class="card">
+                    <div class="card-title">Календар на постоянството</div>
+                    <div class="hm-scroll" id="hm-scroll"><div class="hm-grid">${cells}</div></div>
+                    <div class="hm-legend">
+                        По-малко
+                        <span class="hm-cell"></span>
+                        <span class="hm-cell l1"></span>
+                        <span class="hm-cell l2"></span>
+                        <span class="hm-cell l3"></span>
+                        <span class="hm-cell l100"></span>
+                        Повече · розово = 100% ден
+                    </div>
+                    <div class="card-macros">Последните ${HEATMAP_WEEKS} седмици · докосни квадратче, за да видиш деня.</div>
+                </div>
+            `;
+        }
 
-            dayData.workouts.forEach(w => { if(state[w.id]) completed++; });
-            dayData.meals.forEach(m => { if(state[m.id]) completed++; });
+        function scrollHeatmapToEnd() {
+            const el = document.getElementById('hm-scroll');
+            if (el) el.scrollLeft = el.scrollWidth;
+        }
+
+        // --- Weight tracking (weekly) ---
+        function renderWeightCard() {
+            const sorted = [...state.weights].sort((a, b) => a.date < b.date ? -1 : 1);
+            const latest = sorted[sorted.length - 1];
+            let metaText;
+            if (latest) {
+                const diff = (latest.kg - WEIGHT_GOAL);
+                metaText = `Последно: <strong>${latest.kg} кг</strong> (${latest.date}) · още <strong>${diff > 0 ? diff.toFixed(1) : 0} кг</strong> до целта ${WEIGHT_GOAL} кг`;
+            } else {
+                metaText = `Старт: ${WEIGHT_START} кг · Цел: <strong>${WEIGHT_GOAL} кг</strong>. Запиши първото си тегло!`;
+            }
+            return `
+                <div class="card">
+                    <div class="card-title">Тегло — веднъж седмично</div>
+                    <div class="card-macros">Сутрин, на гладно, в един и същи ден. Гледа се трендът, не отделното число.</div>
+                    <div class="weight-input-row">
+                        <input type="number" id="weight-input" step="0.1" min="40" max="150" placeholder="напр. 66.5" inputmode="decimal">
+                        <button class="weight-save-btn" onclick="saveWeight()">Запиши</button>
+                    </div>
+                    <div class="weight-meta" id="weight-meta">${metaText}</div>
+                    <div class="weight-chart-wrap" id="weight-chart">${renderWeightChart(sorted)}</div>
+                </div>
+            `;
+        }
+
+        function initWeightCard() {
+            const input = document.getElementById('weight-input');
+            if (input) {
+                input.addEventListener('keydown', e => { if (e.key === 'Enter') saveWeight(); });
+            }
+        }
+
+        function saveWeight() {
+            const input = document.getElementById('weight-input');
+            const kg = parseFloat(input.value);
+            if (isNaN(kg) || kg < 40 || kg > 150) {
+                alert('Моля, въведи валидно тегло (напр. 66.5).');
+                return;
+            }
+            const today = todayStr();
+            const thisWeek = mondayOf(today);
+            // One entry per week: replace this week's entry if it exists
+            state.weights = state.weights.filter(w => mondayOf(w.date) !== thisWeek);
+            state.weights.push({ date: today, kg: Math.round(kg * 10) / 10 });
+            saveState();
+            renderDay(); // re-render to refresh chart + meta
+            updateProgress();
+        }
+
+        function renderWeightChart(sorted) {
+            const W = 340, H = 180, padL = 34, padR = 12, padT = 14, padB = 26;
+            const plotW = W - padL - padR, plotH = H - padT - padB;
+
+            const kgs = sorted.map(e => e.kg);
+            const yMax = Math.max(WEIGHT_START + 1, ...(kgs.length ? [Math.max(...kgs) + 1] : []));
+            const yMin = WEIGHT_GOAL - 2;
+            const yPos = kg => padT + (yMax - kg) / (yMax - yMin) * plotH;
+            const xPos = i => sorted.length <= 1 ? padL + plotW / 2 : padL + (i / (sorted.length - 1)) * plotW;
+
+            // Horizontal gridlines every 2 kg
+            let grid = '';
+            for (let kg = Math.ceil(yMin); kg <= Math.floor(yMax); kg++) {
+                if (kg % 2 !== 0) continue;
+                const y = yPos(kg);
+                grid += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="#f0f0ec" stroke-width="1"/>`;
+                grid += `<text x="${padL - 6}" y="${y + 3}" font-size="9" fill="#aaaaaa" text-anchor="end" font-family="Montserrat, sans-serif">${kg}</text>`;
+            }
+
+            // Goal line
+            const gy = yPos(WEIGHT_GOAL);
+            const goal = `
+                <line x1="${padL}" y1="${gy}" x2="${W - padR}" y2="${gy}" stroke="#e0a9a8" stroke-width="1.5" stroke-dasharray="5,4"/>
+                <text x="${W - padR}" y="${gy - 4}" font-size="9" fill="#e0a9a8" text-anchor="end" font-weight="bold" font-family="Montserrat, sans-serif">Цел ${WEIGHT_GOAL} кг</text>
+            `;
+
+            // Data line + points
+            let line = '', points = '', labels = '';
+            if (sorted.length > 0) {
+                const pts = sorted.map((e, i) => `${xPos(i)},${yPos(e.kg)}`).join(' ');
+                if (sorted.length > 1) {
+                    line = `<polyline points="${pts}" fill="none" stroke="#8ba88e" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+                }
+                sorted.forEach((e, i) => {
+                    points += `<circle cx="${xPos(i)}" cy="${yPos(e.kg)}" r="3.5" fill="#8ba88e" stroke="#fff" stroke-width="1.5"/>`;
+                });
+                // Label first and last
+                const first = sorted[0], last = sorted[sorted.length - 1];
+                labels += `<text x="${xPos(0)}" y="${yPos(first.kg) - 8}" font-size="9" fill="#6d8f71" text-anchor="middle" font-weight="bold" font-family="Montserrat, sans-serif">${first.kg}</text>`;
+                if (sorted.length > 1) {
+                    labels += `<text x="${xPos(sorted.length - 1)}" y="${yPos(last.kg) - 8}" font-size="9" fill="#6d8f71" text-anchor="middle" font-weight="bold" font-family="Montserrat, sans-serif">${last.kg}</text>`;
+                }
+            } else {
+                labels = `<text x="${W / 2}" y="${H / 2}" font-size="11" fill="#bbbbbb" text-anchor="middle" font-family="Montserrat, sans-serif">Тук ще се появи твоята линия към целта 🤍</text>`;
+            }
+
+            return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Графика на теглото">${grid}${goal}${line}${points}${labels}</svg>`;
+        }
+
+        // --- Tasks & progress ---
+        function toggleTask(id) {
+            const ds = dayState(currentDate);
+            const before = dayPercent(currentDate);
+            ds.tasks[id] = !ds.tasks[id];
+            saveState();
+
+            const card = document.getElementById(`card-${id}`);
+            if (card) card.classList.toggle('completed', !!ds.tasks[id]);
+
+            updateProgress();
+
+            const after = dayPercent(currentDate);
+            if (after === 100 && before < 100) {
+                celebrate();
+            }
+        }
+
+        function updateProgress() {
+            const plan = planFor(currentDate);
+            const tasks = dayState(currentDate).tasks;
+            const total = allTasks(plan).length;
+            let completed = 0;
+            allTasks(plan).forEach(t => { if (tasks[t.id]) completed++; });
 
             const percentage = total === 0 ? 100 : Math.round((completed / total) * 100);
-            
             progressFill.style.width = `${percentage}%`;
-            
-            if(percentage === 100) {
+
+            if (percentage === 100) {
                 progressText.innerHTML = `Прогрес за деня: <strong>Браво! Всичко е изпълнено! 🎉</strong>`;
-                progressFill.style.background = '#e0a9a8'; // Highlight pink color on completion
+                progressFill.style.background = 'var(--accent-pink-dark)';
             } else {
                 progressText.innerHTML = `Прогрес за деня: ${percentage}% (${completed} от ${total})`;
                 progressFill.style.background = 'var(--primary-sage)';
             }
+
+            weekProgressText.textContent = `Тази седмица: ${weekPercent(todayStr())}%`;
         }
 
+        // --- Celebration: confetti + heart ---
+        function celebrate() {
+            const colors = ['#8ba88e', '#dfbfbe', '#e0a9a8', '#f2d5a0', '#a8c8e0', '#dbe4dc'];
+            for (let i = 0; i < 70; i++) {
+                const c = document.createElement('div');
+                c.className = 'confetti';
+                const size = 6 + Math.random() * 6;
+                c.style.left = Math.random() * 100 + 'vw';
+                c.style.width = size + 'px';
+                c.style.height = size * (0.6 + Math.random() * 0.8) + 'px';
+                c.style.background = colors[Math.floor(Math.random() * colors.length)];
+                c.style.animationDuration = (2 + Math.random() * 1.8) + 's';
+                c.style.animationDelay = (Math.random() * 0.4) + 's';
+                if (Math.random() < 0.3) c.style.borderRadius = '50%';
+                document.body.appendChild(c);
+                setTimeout(() => c.remove(), 4500);
+            }
+            const heart = document.createElement('div');
+            heart.className = 'celebrate-heart';
+            heart.textContent = '💚';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 1700);
+        }
+
+        // --- Swipe between days ---
+        function setupSwipe() {
+            let startX = 0, startY = 0, tracking = false;
+
+            document.addEventListener('touchstart', e => {
+                // Don't hijack horizontally scrollable areas
+                if (e.target && e.target.closest && e.target.closest('.hm-scroll, nav, input, .weight-input-row')) {
+                    tracking = false;
+                    return;
+                }
+                tracking = true;
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+            }, { passive: true });
+
+            document.addEventListener('touchend', e => {
+                if (!tracking) return;
+                tracking = false;
+                const dx = e.changedTouches[0].clientX - startX;
+                const dy = e.changedTouches[0].clientY - startY;
+                if (Math.abs(dx) > 60 && Math.abs(dx) > 2 * Math.abs(dy)) {
+                    if (dx < 0) {
+                        goToDate(addDays(currentDate, 1)); // swipe left → next day
+                    } else {
+                        goToDate(addDays(currentDate, -1)); // swipe right → previous day
+                    }
+                }
+            }, { passive: true });
+        }
+
+        // --- Reset (viewed day only — history is preserved) ---
         function confirmReset() {
-            if(confirm("Сигурна ли си, че искаш да изчистиш всички отметки? Това е подходящо за началото на нова седмица.")) {
-                state = {};
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-                renderDay(currentDayIndex);
+            const d = parseDate(currentDate);
+            if (confirm(`Сигурна ли си, че искаш да изчистиш отметките за ${BG_DAYS_FULL[d.getDay()].toLowerCase()}, ${d.getDate()} ${BG_MONTHS[d.getMonth()]}? Историята на другите дни се пази.`)) {
+                dayState(currentDate).tasks = {};
+                saveState();
+                renderAll();
             }
         }
 
