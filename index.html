@@ -102,13 +102,18 @@
             color: inherit;
         }
 
-        .water-label {
+        .water-label-btn {
+            font-family: inherit;
             font-size: 0.7rem;
-            font-weight: 600;
-            color: var(--text-light);
+            font-weight: 700;
+            color: var(--primary-sage-dark);
+            background: var(--primary-sage-light);
+            border: none;
+            border-radius: 10px;
+            padding: 5px 10px;
             margin-left: 4px;
-            min-width: 44px;
-            text-align: left;
+            cursor: pointer;
+            white-space: nowrap;
         }
 
         /* Progress Bar */
@@ -381,7 +386,7 @@
         .hm-cell.l2 { background: #a8c4ac; }
         .hm-cell.l3 { background: var(--primary-sage); }
         .hm-cell.l100 { background: var(--accent-pink-dark); }
-        .hm-cell.future { background: #f6f6f4; cursor: default; }
+        .hm-cell.future { background: #f6f6f4; }
         .hm-cell.today { outline: 2px solid var(--primary-sage-dark); outline-offset: 1px; }
         .hm-cell.viewing { box-shadow: 0 0 0 2px var(--accent-pink-dark) inset; }
 
@@ -538,23 +543,6 @@
 
         .today-btn.visible {
             display: block;
-        }
-
-        /* Reset Button */
-        .reset-btn {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            margin-top: 30px;
-            background: transparent;
-            border: 2px dashed var(--accent-pink);
-            color: var(--accent-pink);
-            border-radius: var(--border-radius);
-            font-family: inherit;
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-align: center;
-            cursor: pointer;
         }
 
         /* Messages */
@@ -1266,7 +1254,9 @@
 
         const WEIGHT_START = 68;
         const WEIGHT_GOAL = 58;
-        const WATER_GOAL = 8;
+        const WATER_GOAL_ML = 2000; // ~2 л/ден по плана
+        const WATER_CUPS = 8;
+        const CUP_ML = WATER_GOAL_ML / WATER_CUPS; // 250 мл на чаша
 
         function todayStr() {
             return fmtDate(new Date());
@@ -1314,6 +1304,14 @@
             }
             if (!s.days) s.days = {};
             if (!Array.isArray(s.weights)) s.weights = [];
+            // Water used to be stored as a cup count (0–8); it is now milliliters
+            if (!s.waterMl) {
+                Object.values(s.days).forEach(d => {
+                    if (typeof d.water === 'number' && d.water > 0 && d.water <= 8) d.water *= 250;
+                });
+                s.waterMl = true;
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+            }
             return s;
         }
 
@@ -1369,7 +1367,6 @@
         const BG_MONTHS = ['януари', 'февруари', 'март', 'април', 'май', 'юни', 'юли', 'август', 'септември', 'октомври', 'ноември', 'декември'];
         const BG_DAYS_SHORT = { 1: 'ПН', 2: 'ВТ', 3: 'СР', 4: 'ЧТ', 5: 'ПТ', 6: 'СБ', 0: 'НД' };
         const BG_DAYS_FULL = { 1: 'Понеделник', 2: 'Вторник', 3: 'Сряда', 4: 'Четвъртък', 5: 'Петък', 6: 'Събота', 0: 'Неделя' };
-        const HEATMAP_WEEKS = 24; // ~5-6 month goal
 
         let currentDate = todayStr();
 
@@ -1431,22 +1428,38 @@
             }
         }
 
-        // --- Water tracker (per viewed day) ---
+        // --- Water tracker in ml (per viewed day) ---
         function renderWater() {
             const ds = dayState(currentDate);
+            const fullCups = Math.floor(ds.water / CUP_ML);
             let html = '';
-            for (let i = 0; i < WATER_GOAL; i++) {
-                const filled = i < ds.water;
-                html += `<button class="water-cup ${filled ? 'filled' : ''}" onclick="tapWater(${i})" aria-label="Чаша ${i + 1}">💧</button>`;
+            for (let i = 0; i < WATER_CUPS; i++) {
+                const filled = i < fullCups;
+                html += `<button class="water-cup ${filled ? 'filled' : ''}" onclick="tapWater(${i})" aria-label="Чаша ${i + 1} (${CUP_ML} мл)" title="${CUP_ML} мл">💧</button>`;
             }
-            html += `<span class="water-label">${ds.water}/${WATER_GOAL}</span>`;
+            html += `<button class="water-label-btn" onclick="enterWater()">${ds.water} / ${WATER_GOAL_ML} мл ✎</button>`;
             waterRow.innerHTML = html;
         }
 
         function tapWater(i) {
             const ds = dayState(currentDate);
-            // Tap the last filled cup to remove it; tap any cup to fill up to it
-            ds.water = (ds.water === i + 1) ? i : i + 1;
+            // Tap the last filled cup to remove it; tap any cup to fill up to it (250 мл на чаша)
+            const fullCups = Math.floor(ds.water / CUP_ML);
+            ds.water = (fullCups === i + 1) ? i * CUP_ML : (i + 1) * CUP_ML;
+            saveState();
+            renderWater();
+        }
+
+        function enterWater() {
+            const ds = dayState(currentDate);
+            const input = prompt(`Колко мл вода изпи общо за деня? (цел: ${WATER_GOAL_ML} мл)`, ds.water || '');
+            if (input === null) return;
+            const ml = parseInt(String(input).replace(/[^\d]/g, ''), 10);
+            if (isNaN(ml) || ml < 0 || ml > 10000) {
+                alert('Моля, въведи число в милилитри (напр. 1500).');
+                return;
+            }
+            ds.water = ml;
             saveState();
             renderWater();
         }
@@ -1559,9 +1572,6 @@
                 </div>
             `;
 
-            // Reset button (this day only — history stays intact)
-            html += `<button class="reset-btn" onclick="confirmReset()">Изчисти отметките за този ден</button>`;
-
             appContent.innerHTML = html;
 
             if (slideDir) {
@@ -1574,32 +1584,24 @@
             scrollHeatmapToEnd();
         }
 
-        // --- Heatmap (GitHub-style) ---
+        // --- Heatmap (GitHub-style): the whole current year, week by week ---
         function renderHeatmapCard() {
             const today = todayStr();
-            const startMon = addDays(mondayOf(today), -(HEATMAP_WEEKS - 1) * 7);
+            const year = parseDate(today).getFullYear();
+            const startMon = mondayOf(`${year}-01-01`);
+            const endSun = addDays(mondayOf(`${year}-12-31`), 6);
             let cells = '';
-            for (let w = 0; w < HEATMAP_WEEKS; w++) {
-                for (let i = 0; i < 7; i++) {
-                    const ds = addDays(startMon, w * 7 + i);
-                    let cls = 'hm-cell';
-                    let clickable = false;
-                    if (ds > today) {
-                        cls += ' future';
-                    } else {
-                        const pct = dayPercent(ds);
-                        if (pct === 100) cls += ' l100';
-                        else if (pct >= 67) cls += ' l3';
-                        else if (pct >= 34) cls += ' l2';
-                        else if (pct >= 1) cls += ' l1';
-                        clickable = true;
-                    }
-                    if (ds === today) cls += ' today';
-                    if (ds === currentDate) cls += ' viewing';
-                    cells += clickable
-                        ? `<button class="${cls}" onclick="goToDate('${ds}')" title="${ds}"></button>`
-                        : `<span class="${cls}"></span>`;
-                }
+            for (let ds = startMon; ds <= endSun; ds = addDays(ds, 1)) {
+                let cls = 'hm-cell';
+                const pct = dayPercent(ds);
+                if (pct === 100) cls += ' l100';
+                else if (pct >= 67) cls += ' l3';
+                else if (pct >= 34) cls += ' l2';
+                else if (pct >= 1) cls += ' l1';
+                else if (ds > today) cls += ' future';
+                if (ds === today) cls += ' today';
+                if (ds === currentDate) cls += ' viewing';
+                cells += `<button class="${cls}" onclick="goToDate('${ds}')" title="${ds}" ${ds === today ? 'id="hm-today"' : ''}></button>`;
             }
             return `
                 <div class="card">
@@ -1614,14 +1616,19 @@
                         <span class="hm-cell l100"></span>
                         Повече · розово = 100% ден
                     </div>
-                    <div class="card-macros">Последните ${HEATMAP_WEEKS} седмици · докосни квадратче, за да видиш деня.</div>
+                    <div class="card-macros">Цялата ${year} г. · докосни квадратче, за да видиш деня — планът с храните и тренировките се повтаря всяка седмица.</div>
                 </div>
             `;
         }
 
         function scrollHeatmapToEnd() {
             const el = document.getElementById('hm-scroll');
-            if (el) el.scrollLeft = el.scrollWidth;
+            const todayCell = document.getElementById('hm-today');
+            if (el && todayCell) {
+                el.scrollLeft = Math.max(0, todayCell.offsetLeft - el.clientWidth / 2);
+            } else if (el) {
+                el.scrollLeft = el.scrollWidth;
+            }
         }
 
         // --- Weight tracking (weekly) ---
@@ -1813,16 +1820,6 @@
                     }
                 }
             }, { passive: true });
-        }
-
-        // --- Reset (viewed day only — history is preserved) ---
-        function confirmReset() {
-            const d = parseDate(currentDate);
-            if (confirm(`Сигурна ли си, че искаш да изчистиш отметките за ${BG_DAYS_FULL[d.getDay()].toLowerCase()}, ${d.getDate()} ${BG_MONTHS[d.getMonth()]}? Историята на другите дни се пази.`)) {
-                dayState(currentDate).tasks = {};
-                saveState();
-                renderAll();
-            }
         }
 
         // Initialize App
