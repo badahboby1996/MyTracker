@@ -160,6 +160,7 @@
             font-weight: 700;
             color: var(--text-main);
             margin-bottom: 5px;
+            cursor: pointer;
         }
 
         .today-badge {
@@ -459,7 +460,6 @@
             display: flex;
             overflow-x: auto;
             padding: 10px 5px 20px;
-            scroll-snap-type: x mandatory;
             z-index: 100;
         }
 
@@ -499,6 +499,13 @@
             font-weight: 700;
         }
 
+        .day-tab .day-month {
+            display: block;
+            font-size: 0.55rem;
+            text-transform: lowercase;
+            opacity: 0.8;
+        }
+
         .day-tab .today-dot {
             display: block;
             width: 6px;
@@ -522,10 +529,130 @@
             color: var(--primary-sage-dark);
         }
 
+        /* Floating calendar button */
+        .cal-fab {
+            position: fixed;
+            bottom: 105px;
+            left: 15px;
+            z-index: 99;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            background: var(--card-bg);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            font-size: 1.4rem;
+            cursor: pointer;
+        }
+
+        /* Calendar modal */
+        .cal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: 300;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .cal-overlay.open {
+            display: flex;
+        }
+
+        .cal-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 18px;
+            width: 100%;
+            max-width: 360px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .cal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .cal-title {
+            font-weight: 700;
+            color: var(--primary-sage-dark);
+        }
+
+        .cal-arrow {
+            border: none;
+            background: var(--primary-sage-light);
+            color: var(--primary-sage-dark);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+
+        .cal-wd {
+            text-align: center;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--text-light);
+            padding: 4px 0;
+            text-transform: uppercase;
+        }
+
+        .cal-day {
+            aspect-ratio: 1;
+            border: none;
+            background: #f4f4f1;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+            cursor: pointer;
+        }
+
+        .cal-day.empty {
+            background: transparent;
+            cursor: default;
+        }
+
+        .cal-day.l1 { background: #cdddd0; }
+        .cal-day.l2 { background: #a8c4ac; color: #fff; }
+        .cal-day.l3 { background: var(--primary-sage); color: #fff; }
+        .cal-day.l100 { background: var(--accent-pink-dark); color: #fff; }
+        .cal-day.future { background: #fbfbf9; border: 1px solid #efefec; }
+        .cal-day.today { box-shadow: 0 0 0 2px var(--primary-sage-dark); }
+        .cal-day.selected { box-shadow: 0 0 0 2px var(--accent-pink-dark); }
+
+        .cal-close {
+            display: block;
+            width: 100%;
+            margin-top: 12px;
+            padding: 10px;
+            border: none;
+            border-radius: 12px;
+            background: var(--primary-sage);
+            color: #fff;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
         /* Floating "Today" button */
         .today-btn {
             position: fixed;
-            bottom: 95px;
+            bottom: 105px;
             right: 15px;
             z-index: 99;
             background: var(--accent-pink-dark);
@@ -652,6 +779,22 @@
     </main>
 
     <button class="today-btn" id="today-btn" onclick="goToDate(todayStr(), true)">↩ Днес</button>
+    <button class="cal-fab" onclick="openCalendar()" aria-label="Отвори календара">📅</button>
+
+    <div class="cal-overlay" id="cal-overlay">
+        <div class="cal-card">
+            <div class="cal-head">
+                <button class="cal-arrow" onclick="calShift(-1)">‹</button>
+                <div class="cal-title" id="cal-title"></div>
+                <button class="cal-arrow" onclick="calShift(1)">›</button>
+            </div>
+            <div class="cal-grid">
+                <span class="cal-wd">Пн</span><span class="cal-wd">Вт</span><span class="cal-wd">Ср</span><span class="cal-wd">Чт</span><span class="cal-wd">Пт</span><span class="cal-wd">Сб</span><span class="cal-wd">Нд</span>
+            </div>
+            <div class="cal-grid" id="cal-days"></div>
+            <button class="cal-close" onclick="closeCalendar()">Затвори</button>
+        </div>
+    </div>
 
     <nav id="bottom-nav">
         <!-- Tabs get injected here -->
@@ -1381,6 +1524,9 @@
         function init() {
             renderAll();
             setupSwipe();
+            calOverlay.addEventListener('click', e => {
+                if (e.target === calOverlay) closeCalendar();
+            });
         }
 
         function renderAll(slideDir) {
@@ -1402,13 +1548,17 @@
             todayBtn.classList.toggle('visible', currentDate !== todayStr());
         }
 
-        // --- Bottom nav: the week of the currently viewed date, with real dates ---
+        // --- Bottom nav: every date until the end of the year, scrollable ---
+        const BG_MONTHS_SHORT = ['яну', 'фев', 'мар', 'апр', 'май', 'юни', 'юли', 'авг', 'сеп', 'окт', 'ное', 'дек'];
+
         function renderNav() {
-            const mon = mondayOf(currentDate);
             const today = todayStr();
+            const year = parseDate(currentDate).getFullYear();
+            const start = `${year}-01-01`;
+            const end = `${year}-12-31`;
             bottomNav.innerHTML = '';
-            for (let i = 0; i < 7; i++) {
-                const ds = addDays(mon, i);
+            let activeBtn = null;
+            for (let ds = start; ds <= end; ds = addDays(ds, 1)) {
                 const d = parseDate(ds);
                 const btn = document.createElement('button');
                 const isToday = ds === today;
@@ -1418,13 +1568,16 @@
                 btn.innerHTML = `
                     <span class="day-name">${BG_DAYS_SHORT[d.getDay()]}</span>
                     <span class="day-num">${d.getDate()}</span>
+                    <span class="day-month">${BG_MONTHS_SHORT[d.getMonth()]}</span>
                     ${isToday ? '<span class="today-dot"></span>' : ''}
                 `;
-                btn.onclick = () => {
-                    goToDate(ds);
-                    btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                };
+                const dateStr = ds;
+                btn.onclick = () => goToDate(dateStr);
+                if (ds === currentDate) activeBtn = btn;
                 bottomNav.appendChild(btn);
+            }
+            if (activeBtn) {
+                bottomNav.scrollLeft = activeBtn.offsetLeft - bottomNav.clientWidth / 2 + activeBtn.clientWidth / 2;
             }
         }
 
@@ -1473,11 +1626,11 @@
             const isToday = dateStr === todayStr();
 
             let html = `
-                <div class="date-heading">
-                    ${BG_DAYS_FULL[d.getDay()]}, ${d.getDate()} ${BG_MONTHS[d.getMonth()]}
+                <div class="date-heading" onclick="openCalendar()" title="Отвори календара">
+                    ${BG_DAYS_FULL[d.getDay()]}, ${d.getDate()} ${BG_MONTHS[d.getMonth()]} 📅
                     ${isToday ? '<span class="today-badge">Днес</span>' : ''}
                 </div>
-                <div class="swipe-hint">← плъзни за смяна на деня →</div>
+                <div class="swipe-hint">← плъзни за смяна · докосни датата за календар →</div>
             `;
 
             // Workouts Section
@@ -1729,6 +1882,54 @@
             return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Графика на теглото">${grid}${goal}${line}${points}${labels}</svg>`;
         }
 
+        // --- Interactive month calendar (modal) ---
+        let calY = 0, calM = 0;
+        const calOverlay = document.getElementById('cal-overlay');
+
+        function openCalendar() {
+            const d = parseDate(currentDate);
+            calY = d.getFullYear();
+            calM = d.getMonth();
+            renderCalendar();
+            calOverlay.classList.add('open');
+        }
+
+        function closeCalendar() {
+            calOverlay.classList.remove('open');
+        }
+
+        function calShift(n) {
+            calM += n;
+            if (calM < 0) { calM = 11; calY--; }
+            if (calM > 11) { calM = 0; calY++; }
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const today = todayStr();
+            const monthName = BG_MONTHS[calM].charAt(0).toUpperCase() + BG_MONTHS[calM].slice(1);
+            document.getElementById('cal-title').textContent = `${monthName} ${calY} г.`;
+            const first = new Date(calY, calM, 1);
+            const offset = (first.getDay() + 6) % 7; // Monday-first
+            const daysInMonth = new Date(calY, calM + 1, 0).getDate();
+            let html = '';
+            for (let i = 0; i < offset; i++) html += '<span class="cal-day empty"></span>';
+            for (let day = 1; day <= daysInMonth; day++) {
+                const ds = fmtDate(new Date(calY, calM, day));
+                let cls = 'cal-day';
+                const pct = dayPercent(ds);
+                if (pct === 100) cls += ' l100';
+                else if (pct >= 67) cls += ' l3';
+                else if (pct >= 34) cls += ' l2';
+                else if (pct >= 1) cls += ' l1';
+                else if (ds > today) cls += ' future';
+                if (ds === today) cls += ' today';
+                if (ds === currentDate) cls += ' selected';
+                html += `<button class="${cls}" onclick="goToDate('${ds}'); closeCalendar()">${day}</button>`;
+            }
+            document.getElementById('cal-days').innerHTML = html;
+        }
+
         // --- Tasks & progress ---
         function toggleTask(id) {
             const ds = dayState(currentDate);
@@ -1798,7 +1999,7 @@
 
             document.addEventListener('touchstart', e => {
                 // Don't hijack horizontally scrollable areas
-                if (e.target && e.target.closest && e.target.closest('.hm-scroll, nav, input, .weight-input-row')) {
+                if (e.target && e.target.closest && e.target.closest('.hm-scroll, nav, input, .weight-input-row, .cal-overlay')) {
                     tracking = false;
                     return;
                 }
