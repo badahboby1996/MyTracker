@@ -1,4 +1,4 @@
-const CACHE = "shirin-food-plan-static-v3";
+const CACHE = "shirin-food-plan-static-v4";
 const BASE = new URL("./", self.location.href);
 const ASSETS = [
   "./",
