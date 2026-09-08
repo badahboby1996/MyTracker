@@ -1,6 +1,6 @@
 'use strict';
 // При качване на нов комплект файлове увеличи BUILD. Данните са отделно в localStorage.
-const BUILD='2026-09-08-1';
+const BUILD='2026-09-08-2';
 const ROOT=self.registration.scope;
 const PREFIX='hustle-sep2026:'+new URL(ROOT).pathname+':';
 const CACHE=PREFIX+BUILD;
