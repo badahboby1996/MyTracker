@@ -1,10 +1,10 @@
 'use strict';
 // При качване на нов комплект файлове увеличи BUILD. Данните са отделно в localStorage.
-const BUILD='2026-09-08-2';
+const BUILD='2026-09-08-studio-3';
 const ROOT=self.registration.scope;
 const PREFIX='hustle-sep2026:'+new URL(ROOT).pathname+':';
 const CACHE=PREFIX+BUILD;
-const ASSETS=['index.html','app.js','plan.js','manifest.webmanifest','icon-192.png','icon-512.png','apple-touch-icon.png'];
+const ASSETS=['index.html','app.js','plan.js','studio-glass.webp','manifest.webmanifest','icon-192.png','icon-512.png','apple-touch-icon.png'];
 self.addEventListener('install',event=>{
  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS.map(path=>new Request(new URL(path,ROOT),{cache:'reload'})))));
 });
